@@ -30,15 +30,15 @@
     "access": "public"
   },
   "devDependencies": {
-    "browserify": "16.2.3",
+    "browserify": "16.5.1",
     "chai": "^4.2.0",
-    "coveralls": "3.0.2",
-    "eslint": "5.14.0",
+    "coveralls": "3.1.0",
+    "eslint": "6.8.0",
     "eslint-plugin-nodeca": "1.0.3",
     "istanbul": "0.4.5",
-    "markdown-it": "8.4.2",
-    "markdown-it-testgen": "0.1.4",
-    "mocha": "5.2.0",
-    "uglify-js": "3.4.9"
+    "@gerhobbelt/markdown-it": "10.0.0-32",
+    "@gerhobbelt/markdown-it-testgen": "0.1.6-7",
+    "mocha": "7.1.2",
+    "uglify-js": "3.9.2"
   }
 }

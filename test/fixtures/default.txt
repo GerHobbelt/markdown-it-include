@@ -70,3 +70,33 @@ inline includes
 <p><em>x contenty contentz content</em></p>
 <p><em>content</em></p>
 .
+
+
+Repeated includes
+.
+!!!include(b.md)!!!
+
+*content A*
+
+!!!include(a.md)!!!
+
+*content B*
+
+!!!include(f.md)!!!
+
+*content C*
+
+!!!include(b.md)!!!
+.
+<p><em>b content</em></p>
+<p><em>a content</em></p>
+<p><em>content A</em></p>
+<p><em>a content</em></p>
+<p><em>content B</em></p>
+<p><em>f content</em></p>
+<p><em>b content</em></p>
+<p><em>a content</em></p>
+<p><em>content C</em></p>
+<p><em>b content</em></p>
+<p><em>a content</em></p>
+.
