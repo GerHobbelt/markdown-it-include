@@ -12,8 +12,8 @@ GITHUB_PROJ := https://github.com//camelaissani//markdown-it-include
 lint:
 	./node_modules/.bin/eslint .
 
-lintWin10PS:
-	.\node_modules\.bin\eslint .
+lintfix:
+	./node_modules/.bin/eslint . --fix
 
 test: lint
 	./node_modules/.bin/mocha -R spec
