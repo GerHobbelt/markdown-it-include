@@ -1,6 +1,6 @@
 {
   "name": "@gerhobbelt/markdown-it-include",
-  "version": "1.1.0-2",
+  "version": "1.1.0-3",
   "description": "Markdown-it plugin which adds the ability to include markdown fragment files.",
   "keywords": [
     "markdown-it-plugin",
@@ -10,7 +10,7 @@
   ],
   "repository": "GerHobbelt/markdown-it-include",
   "license": "MIT",
-    "original-repository": "camelaissani/markdown-it-include",
+  "original-repository": "camelaissani/markdown-it-include",
   "main": "index.js",
   "engines": {
     "node": ">=8.0"
