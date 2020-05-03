@@ -1,6 +1,6 @@
 {
-  "name": "markdown-it-include",
-  "version": "0.0.2",
+  "name": "@gerhobbelt/markdown-it-include",
+  "version": "0.0.2-1",
   "description": "Markdown-it plugin which adds the ability to include markdown fragment files.",
   "keywords": [
     "markdown-it-plugin",
@@ -18,23 +18,24 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "pub": "npm publish --access public"
   },
   "author": {
-    "name" : "Camel Aissani",
-    "email" : "camel.aissani@gmail.com",
-    "url" : "https://nuageprive.fr/"
+    "name": "Camel Aissani",
+    "email": "camel.aissani@gmail.com",
+    "url": "https://nuageprive.fr/"
   },
   "devDependencies": {
-    "eslint": "0.10.2",
-    "eslint-plugin-nodeca": "^1.0.0",
-    "browserify": "*",
-    "coveralls": "^2.11.2",
-    "uglify-js": "*",
-    "istanbul": "*",
-    "chai": "*",
-    "mocha": "*",
-    "markdown-it-testgen": "~0.1.0",
-    "markdown-it": "markdown-it/markdown-it"
+    "eslint": "6.6.0",
+    "eslint-plugin-nodeca": "^1.0.3",
+    "browserify": "16.5.0",
+    "coveralls": "^3.0.7",
+    "uglify-js": "3.6.8",
+    "istanbul": "0.4.5",
+    "chai": "4.2.0",
+    "mocha": "6.2.2",
+    "@gerhobbelt/markdown-it-testgen": "0.1.5-6",
+    "@gerhobbelt/markdown-it": "10.0.0-30"
   }
 }
