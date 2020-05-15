@@ -26,7 +26,7 @@ module.exports = function include_plugin(md, options) {
 
   function _replaceIncludeByContent(src, rootdir, parentFilePath, filesProcessed) {
     filesProcessed = filesProcessed ? filesProcessed.slice() : []; // making a copy
-    var cap, filePath, mdSrc;
+    var cap, filePath, mdSrc, errorMessage;
 
     // store parent file path to check circular references
     if (parentFilePath) {
@@ -34,21 +34,23 @@ module.exports = function include_plugin(md, options) {
     }
     while ((cap = includeRe.exec(src))) {
       filePath = path.resolve(rootdir, cap[1].trim());
-      mdSrc = '';
 
       // check if child file exists or if there is a circular reference
-      if (fs.existsSync(filePath) === false) {
+      if (!fs.existsSync(filePath)) {
         // child file does not exist
-        mdSrc = notFoundMessage.replace('{{FILE}}', filePath);
+        errorMessage = notFoundMessage.replace('{{FILE}}', filePath);
       } else if (filesProcessed.indexOf(filePath) !== -1) {
         // reference would be circular
-        mdSrc = circularMessage.replace('{{FILE}}', filePath).replace('{{PARENT}}', parentFilePath);
+        errorMessage = circularMessage.replace('{{FILE}}', filePath).replace('{{PARENT}}', parentFilePath);
       }
 
-      // check if there were any errors and / or ensure error message is not empty
-      if (mdSrc !== '' && throwError === true) {
-        throw new Error(mdSrc);
-      } else if (mdSrc === '') {
+      // check if there were any errors
+      if (errorMessage) {
+        if (throwError) {
+          throw new Error(errorMessage);
+        }
+        mdSrc = errorMessage;
+      } else {
         // get content of child file
         mdSrc = fs.readFileSync(filePath, 'utf8');
         // check if child file also has includes
