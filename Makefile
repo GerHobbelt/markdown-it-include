@@ -1,7 +1,10 @@
 PATH        := ./node_modules/.bin:${PATH}
 
-NPM_PACKAGE := $(shell node -e 'process.stdout.write(require("./package.json").name.replace(/^.*?\//, ""))')
-NPM_VERSION := $(shell node -e 'process.stdout.write(require("./package.json").version)')
+NPM_PACKAGE := $(shell support/getGlobalName.js package)
+NPM_VERSION := $(shell support/getGlobalName.js version)
+
+GLOBAL_NAME := $(shell support/getGlobalName.js global)
+BUNDLE_NAME := $(shell support/getGlobalName.js microbundle)
 
 TMP_PATH    := /tmp/${NPM_PACKAGE}-$(shell date +%s)
 
@@ -12,22 +15,30 @@ CURR_HEAD   := $(firstword $(shell git show-ref --hash HEAD | cut -b -6) master)
 GITHUB_PROJ := https://github.com//GerHobbelt/${NPM_PACKAGE}
 
 
-build: lint test coverage
-	
+build: lint bundle test coverage todo 
+
 lint:
 	eslint .
 
 lintfix:
-	eslint . --fix
+	eslint --fix .
 
-test: lint
-	mocha -R spec
+bundle:
+	-rm -rf ./dist
+	mkdir dist
+	microbundle --no-compress --target node --strict --name ${GLOBAL_NAME}
+	npx prepend-header 'dist/*js' support/header.js
+
+test:
+	mocha
 
 coverage:
 	-rm -rf coverage
-	node_modules/.bin/cross-env NODE_ENV=test node_modules/.bin/nyc node_modules/mocha/bin/_mocha
+	-rm -rf .nyc_output
+	cross-env NODE_ENV=test nyc mocha
 
-report-coverage: coverage
+report-coverage: lint coverage
+
 
 publish:
 	@if test 0 -ne `git status --porcelain | wc -l` ; then \
@@ -45,26 +56,17 @@ publish:
 	git tag ${NPM_VERSION} && git push origin ${NPM_VERSION}
 	npm run pub
 
-browserify:
-	-rm -rf ./dist
-	mkdir dist
-	# Browserify
-	( printf "/*! ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} @license MIT */" ; \
-		browserify ./index.js -s markdownitInclude \
-		) > dist/${NPM_PACKAGE}.js
-
-minify: browserify
-	# Minify
-	terser dist/${NPM_PACKAGE}.js -b beautify=false,ascii_only=true -c -m \
-		--preamble "/*! ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} @license MIT */" \
-		> dist/${NPM_PACKAGE}.min.js
-
+todo:
+	@echo ""
+	@echo "TODO list"
+	@echo "---------"
+	@echo ""
+	grep 'TODO' -n -r ./ --exclude-dir=node_modules --exclude-dir=unicode-homographs --exclude-dir=dist --exclude-dir=coverage --exclude=Makefile 2>/dev/null || test true
 
 clean:
 	-rm -rf ./coverage/
-	-rm -rf ./demo/
-	-rm -rf ./apidoc/
 	-rm -rf ./dist/
+	-rm -rf ./.nyc_output/
 
 superclean: clean
 	-rm -rf ./node_modules/
@@ -73,7 +75,8 @@ superclean: clean
 prep: superclean
 	-ncu -a --packageFile=package.json
 	-npm install
+	-npm audit fix
 
 
-.PHONY: lint lintfix test coverage test-ci browserify all
-.SILENT: lint test
+.PHONY: clean superclean prep publish lint fix test todo coverage report-coverage doc build gh-doc bundle
+.SILENT: help lint test todo

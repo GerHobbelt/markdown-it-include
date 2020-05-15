@@ -8,42 +8,48 @@
     "markdown",
     "include"
   ],
-  "repository": "GerHobbelt/markdown-it-include",
-  "license": "MIT",
-  "original-repository": "camelaissani/markdown-it-include",
-  "main": "index.js",
-  "engines": {
-    "node": ">=8.0"
-  },
-  "scripts": {
-    "build": "make",
-    "test": "make test",
-    "clean": "make clean",
-    "superclean": "make superclean",
-    "lint": "make lint",
-    "lintfix": "make lintfix",
-    "cov": "cross-env NODE_ENV=test nyc mocha",
-    "pub": "npm publish --access public"
-  },
   "author": {
     "name": "Camel Aissani",
     "email": "camel.aissani@gmail.com",
     "url": "https://nuageprive.fr/"
   },
+  "original-repository": "camelaissani/markdown-it-include",
+  "repository": "GerHobbelt/markdown-it-include",
+  "license": "MIT",
+  "source": "index.js",
+  "main": "dist/markdownItInclude.js",
+  "module": "dist/markdownItInclude.mjs",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "make",
+    "test": "make test",
+    "todo": "make todo",
+    "clean": "make clean",
+    "superclean": "make superclean",
+    "doc": "make doc",
+    "lint": "make lint",
+    "lintfix": "make lintfix",
+    "cov": "make report-coverage",
+    "pub": "npm publish --access public"
+  },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
-    "@gerhobbelt/markdown-it": "10.0.0-32",
+    "@gerhobbelt/markdown-it": "10.0.0-34",
     "@gerhobbelt/markdown-it-testgen": "0.1.6-7",
-    "browserify": "16.5.1",
     "chai": "4.2.0",
-    "coveralls": "3.1.0",
-    "cross-env": "7.0.2",
-    "eslint": "6.8.0",
-    "eslint-plugin-nodeca": "1.0.3",
+    "eslint": "7.0.0",
     "mocha": "7.1.2",
     "nyc": "15.0.1",
+    "microbundle": "0.12.0",
     "terser": "4.6.13"
-  }
+  },
+  "reporter": [
+    "lcov",
+    "text",
+    "text-summary"
+  ]
 }
