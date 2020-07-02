@@ -1,4 +1,4 @@
-/*! markdown-it-include 1.1.1-5 https://github.com//GerHobbelt/markdown-it-include @license MIT */
+/*! markdown-it-include 1.1.2-6 https://github.com//GerHobbelt/markdown-it-include @license MIT */
 
 'use strict';
 
