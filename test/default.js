@@ -1,12 +1,11 @@
 
+/* eslint-env mocha, es6 */
 
-/*eslint-env mocha*/
-
-let assert = require('chai').assert;
-let path = require('path');
-let generate = require('@gerhobbelt/markdown-it-testgen');
-let Md = require('@gerhobbelt/markdown-it');
-let markdown_it_include = require('../');
+const assert = require('assert');
+const path = require('path');
+const generate = require('@gerhobbelt/markdown-it-testgen');
+const Md = require('@gerhobbelt/markdown-it');
+const markdown_it_include = require('../');
 
 
 let fixturesPath = path.join(__dirname, 'fixtures');
@@ -51,7 +50,11 @@ describe('plugin', function () {
 
     it ('includeRe option', function () {
       let md = Md()
-        .use(markdown_it_include, { root: fixturesPath, includeRe: /<\[include\]\((.+)\)/i });
+        .use(markdown_it_include, {
+          root: fixturesPath,
+          includeRe: /<\[include\](.+)/i,
+          bracesAreOptional: false           // path MUST have braces
+        });
 
       assert.equal(md.render('<[include]( a.md )\n'),
         '<p><em>a content</em></p>\n');
@@ -84,6 +87,46 @@ describe('plugin', function () {
       assert.throws(function () {
         md.render('!!! include( L1/L2/e2.md ) !!!');
       }, Error, /circular reference/i);
+    });
+  });
+
+  describe('options', function () {
+    const options = {
+      root: fixturesPath,
+      includeRe: /#include(.+)/,
+      bracesAreOptional: true
+    };
+
+    it ('accepts C-like includes with custom RE', function () {
+      let md = Md()
+        .use(markdown_it_include, options);
+      generate(path.join(__dirname, 'fixtures/incM.txt'), md);
+    });
+
+    it ('barfs on illegal include statement without space(s)', function () {
+      let md = Md()
+        .use(markdown_it_include, options);
+
+      assert.throws(function () {
+        md.render('#includexxx.md');
+      }, Error, /when not using braces around the path.*it MUST be preceeded by at least one whitespace character/i);
+    });
+
+    it ('barfs on missing braces when option says they\'re mandatory (default)', function () {
+      let md = Md()
+        .use(markdown_it_include, Object.assign({}, options, { bracesAreOptional: false }));
+
+      assert.throws(function () {
+        md.render('#include xxx.md');
+      }, Error, /MUST have '()' braces around the include path/i);
+    });
+
+    it ('dumps error in the generated output when throwError option is FALSE', function () {
+      let md = Md()
+        .use(markdown_it_include, Object.assign({}, options, { throwError: false }));
+
+      assert.equal(md.render('#include(xxx.md)\n'),
+        "<h1>INCLUDE ERROR: File 'W:\\Projects\\sites\\library.visyond.gov\\80\\lib\\js\\markdown-it-include\\test\\fixtures\\xxx.md' not found.</h1>\n");
     });
   });
 });
