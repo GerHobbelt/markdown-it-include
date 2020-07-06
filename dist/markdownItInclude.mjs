@@ -1,4 +1,4 @@
-/*! markdown-it-include 1.1.2-7 https://github.com//GerHobbelt/markdown-it-include @license MIT */
+/*! markdown-it-include 1.1.3-7 https://github.com//GerHobbelt/markdown-it-include @license MIT */
 
 let path = require('path'),
     fs = require('fs');
@@ -9,6 +9,7 @@ let BRACES_RE = /\((.+?)\)/i;
 module.exports = function include_plugin(md, options) {
   const defaultOptions = {
     root: '.',
+    getRootDir: (options, state, startLine, endLine) => options.root,
     includeRe: INCLUDE_RE,
     throwError: true,
     bracesAreOptional: false,
@@ -92,8 +93,8 @@ module.exports = function include_plugin(md, options) {
     return src;
   }
 
-  function _includeFileParts(state) {
-    state.src = _replaceIncludeByContent(state.src, options.root);
+  function _includeFileParts(state, startLine, endLine, silent) {
+    state.src = _replaceIncludeByContent(state.src, options.getRootDir(options, state, startLine, endLine));
   }
 
   md.core.ruler.before('normalize', 'include', _includeFileParts);
