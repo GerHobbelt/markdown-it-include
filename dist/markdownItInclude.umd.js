@@ -1,17 +1,36 @@
-/*! markdown-it-include 1.1.3-8 https://github.com//GerHobbelt/markdown-it-include @license MIT */
+/*! markdown-it-include 2.0.0-9 https://github.com//GerHobbelt/markdown-it-include @license MIT */
 
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
   factory();
 }((function () { 'use strict';
 
-  let path = require('path'),
-      fs = require('fs');
+  function _extends() {
+    _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
 
-  let INCLUDE_RE = /\!{3}\s*include(.+?)\!{3}/i;
-  let BRACES_RE = /\((.+?)\)/i;
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
+      }
 
-  module.exports = function include_plugin(md, options) {
+      return target;
+    };
+
+    return _extends.apply(this, arguments);
+  }
+
+  const path = require('path');
+
+  const fs = require('fs');
+
+  const INCLUDE_RE = /!{3}\s*include(.+?)!{3}/i;
+  const BRACES_RE = /\((.+?)\)/i;
+
+  function include_plugin(md, options) {
     const defaultOptions = {
       root: '.',
       getRootDir: (options, state, startLine, endLine) => options.root,
@@ -23,11 +42,11 @@
     };
 
     if (typeof options === 'string') {
-      options = Object.assign({}, defaultOptions, {
+      options = _extends({}, defaultOptions, {
         root: options
       });
     } else {
-      options = Object.assign({}, defaultOptions, options);
+      options = _extends({}, defaultOptions, options);
     }
 
     function _replaceIncludeByContent(src, rootdir, parentFilePath, filesProcessed) {
@@ -41,17 +60,17 @@
 
       while (cap = options.includeRe.exec(src)) {
         let includePath = cap[1].trim();
-        let sansBracesMatch = BRACES_RE.exec(includePath);
+        const sansBracesMatch = BRACES_RE.exec(includePath);
 
         if (!sansBracesMatch && !options.bracesAreOptional) {
           errorMessage = `INCLUDE statement '${src.trim()}' MUST have '()' braces around the include path ('${includePath}')`;
         } else if (sansBracesMatch) {
           includePath = sansBracesMatch[1].trim();
-        } else {
+        } else if (!/^\s/.test(cap[1])) {
           // path SHOULD have been preceeded by at least ONE whitespace character!
-          if (!/^\s/.test(cap[1])) {
-            errorMessage = `INCLUDE statement '${src.trim()}': when not using braces around the path ('${includePath}'), it MUST be preceeded by at least one whitespace character to separate the include keyword and the include path.`;
-          }
+
+          /* eslint max-len: "off" */
+          errorMessage = `INCLUDE statement '${src.trim()}': when not using braces around the path ('${includePath}'), it MUST be preceeded by at least one whitespace character to separate the include keyword and the include path.`;
         }
 
         if (!errorMessage) {
@@ -84,7 +103,7 @@
           // will be merged with the newline after the #include statement, resulting in a 2-NL paragraph
           // termination.
 
-          let len = mdSrc.length;
+          const len = mdSrc.length;
 
           if (mdSrc[len - 1] === '\n') {
             mdSrc = mdSrc.substring(0, len - 1);
@@ -103,7 +122,9 @@
     }
 
     md.core.ruler.before('normalize', 'include', _includeFileParts);
-  };
+  }
+
+  module.exports = include_plugin;
 
 })));
 //# sourceMappingURL=markdownItInclude.umd.js.map

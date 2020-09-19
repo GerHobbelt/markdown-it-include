@@ -86,8 +86,8 @@ Here's an example where the root directory for the relative paths in the MarkDow
 const options = {
   root: '/bogus/',
   // show the 
-  getRootDir: (options, state, startLine, endLine) => 
-      state.env.getIncludeRootDir(options, state, startLine, endLine) 
+  getRootDir: (options, state, startLine, endLine) =>
+      state.env.getIncludeRootDir(options, state, startLine, endLine),
   bracesAreOptional: true
 };
 
@@ -96,28 +96,28 @@ let md = require('markdown-it')()
 
 ...
 
-    // now in some async code rendering multiple MD files, we can do this:
-    
-    // (`mdPath` is an absolute path pointing to the MD file being processed)
-    let mdPath = ...;
+// now in some async code rendering multiple MD files, we can do this:
 
-    let env = {};
-    env.getIncludeRootDir = function (options, state, startLine, endLine) {
-      return path.dirname(mdPath);
-    };
+// (`mdPath` is an absolute path pointing to the MD file being processed)
+let mdPath = ...;
 
-    // Use the 'unwrapped' version of the md.render / md.parse process:
-    // 
-    // let content = md.render(data); --> .parse + .renderer.render
-    //
-    // .parse --> new state + process: return tokens
-    // let tokens = md.parse(data, env)
-    let state = new md.core.State(data, md, env);   // <-- here our env is injected into state!
-    md.core.process(state);
-    let tokens = state.tokens;
-    // now call md.render():
-    let htmlContent = md.renderer.render(tokens, md.options, env);
-    // presto!              (End of `env` lifetime, BTW.)
+let env = {};
+env.getIncludeRootDir = function (options, state, startLine, endLine) {
+  return path.dirname(mdPath);
+};
+
+// Use the 'unwrapped' version of the md.render / md.parse process:
+//
+// let content = md.render(data); --> .parse + .renderer.render
+//
+// .parse --> new state + process: return tokens
+// let tokens = md.parse(data, env)
+let state = new md.core.State(data, md, env);   // <-- here our env is injected into state!
+md.core.process(state);
+let tokens = state.tokens;
+// now call md.render():
+let htmlContent = md.renderer.render(tokens, md.options, env);
+// presto!              (End of `env` lifetime, BTW.)
 ```
 
 ### includeRe

@@ -1,11 +1,11 @@
 
-let path = require('path'),
-    fs = require('fs');
+const path = require('path');
+const fs = require('fs');
 
-let INCLUDE_RE = /\!{3}\s*include(.+?)\!{3}/i;
-let BRACES_RE = /\((.+?)\)/i;
+const INCLUDE_RE = /!{3}\s*include(.+?)!{3}/i;
+const BRACES_RE = /\((.+?)\)/i;
 
-module.exports = function include_plugin(md, options) {
+function include_plugin(md, options) {
   const defaultOptions = {
     root: '.',
     getRootDir: (options, state, startLine, endLine) => options.root,
@@ -17,11 +17,15 @@ module.exports = function include_plugin(md, options) {
   };
 
   if (typeof options === 'string') {
-    options = Object.assign({}, defaultOptions, {
+    options = {
+      ...defaultOptions,
       root: options
-    });
+    };
   } else {
-    options = Object.assign({}, defaultOptions, options);
+    options = {
+      ...defaultOptions,
+      ...options
+    };
   }
 
   function _replaceIncludeByContent(src, rootdir, parentFilePath, filesProcessed) {
@@ -34,17 +38,16 @@ module.exports = function include_plugin(md, options) {
     }
     while ((cap = options.includeRe.exec(src))) {
       let includePath = cap[1].trim();
-      let sansBracesMatch = BRACES_RE.exec(includePath);
+      const sansBracesMatch = BRACES_RE.exec(includePath);
 
       if (!sansBracesMatch && !options.bracesAreOptional) {
         errorMessage = `INCLUDE statement '${src.trim()}' MUST have '()' braces around the include path ('${includePath}')`;
       } else if (sansBracesMatch) {
         includePath = sansBracesMatch[1].trim();
-      } else {
+      } else if (!/^\s/.test(cap[1])) {
         // path SHOULD have been preceeded by at least ONE whitespace character!
-        if (!/^\s/.test(cap[1])) {
-          errorMessage = `INCLUDE statement '${src.trim()}': when not using braces around the path ('${includePath}'), it MUST be preceeded by at least one whitespace character to separate the include keyword and the include path.`;
-        }
+        /* eslint max-len: "off" */
+        errorMessage = `INCLUDE statement '${src.trim()}': when not using braces around the path ('${includePath}'), it MUST be preceeded by at least one whitespace character to separate the include keyword and the include path.`;
       }
 
       if (!errorMessage) {
@@ -77,7 +80,7 @@ module.exports = function include_plugin(md, options) {
         // However, when that snippet writer terminated with TWO (or more) newlines, these, minus one,
         // will be merged with the newline after the #include statement, resulting in a 2-NL paragraph
         // termination.
-        let len = mdSrc.length;
+        const len = mdSrc.length;
         if (mdSrc[len - 1] === '\n') {
           mdSrc = mdSrc.substring(0, len - 1);
         }
@@ -94,4 +97,6 @@ module.exports = function include_plugin(md, options) {
   }
 
   md.core.ruler.before('normalize', 'include', _includeFileParts);
-};
+}
+
+module.exports = include_plugin;
