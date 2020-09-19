@@ -8,7 +8,7 @@ const BRACES_RE = /\((.+?)\)/i;
 function include_plugin(md, options) {
   const defaultOptions = {
     root: '.',
-    getRootDir: (options, state, startLine, endLine) => options.root,
+    getRootDir: (pluginOptions, state, startLine, endLine) => pluginOptions.root,
     includeRe: INCLUDE_RE,
     throwError: true,
     bracesAreOptional: false,
