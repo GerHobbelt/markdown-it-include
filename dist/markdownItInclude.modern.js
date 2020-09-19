@@ -1,4 +1,4 @@
-/*! markdown-it-include 2.0.0-9 https://github.com//GerHobbelt/markdown-it-include @license MIT */
+/*! markdown-it-include 2.0.0-10 https://github.com//GerHobbelt/markdown-it-include @license MIT */
 
 const path = require('path');
 
