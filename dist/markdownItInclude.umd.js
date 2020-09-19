@@ -1,4 +1,4 @@
-/*! markdown-it-include 2.0.0-10 https://github.com//GerHobbelt/markdown-it-include @license MIT */
+/*! markdown-it-include 2.0.0-11 https://github.com//GerHobbelt/markdown-it-include @license MIT */
 
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
@@ -33,7 +33,7 @@
   function include_plugin(md, options) {
     const defaultOptions = {
       root: '.',
-      getRootDir: (options, state, startLine, endLine) => options.root,
+      getRootDir: (pluginOptions, state, startLine, endLine) => pluginOptions.root,
       includeRe: INCLUDE_RE,
       throwError: true,
       bracesAreOptional: false,

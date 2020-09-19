@@ -1,6 +1,6 @@
 {
   "name": "@gerhobbelt/markdown-it-include",
-  "version": "2.0.0-10",
+  "version": "2.0.0-11",
   "description": "Markdown-it plugin which adds the ability to include markdown fragment files.",
   "keywords": [
     "markdown-it-plugin",
